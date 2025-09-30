@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>AI & Machine Learning Tutorial - 50 Q&A</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f4f7fa;
+      margin: 0;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+
+    .qa-container {
+      max-width: 900px;
+      margin: 20px auto;
+    }
+
+    .qa-item {
+      background-color: #fff;
+      border: 1px solid #dcdcdc;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: box-shadow 0.3s;
+    }
+
+    .qa-item:hover {
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    .question {
+      padding: 15px 20px;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #3498db;
+      color: white;
+      position: relative;
+    }
+
+    .question::after {
+      content: '+';
+      position: absolute;
+      right: 20px;
+      font-size: 20px;
+      transition: transform 0.3s;
+    }
+
+    .question.active::after {
+      content: '-';
+      transform: rotate(180deg);
+    }
+
+    .answer {
+      display: none;
+      padding: 15px 20px;
+      background-color: #ecf0f1;
+      color: #2c3e50;
+      line-height: 1.6;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>AI & Machine Learning Tutorial - 50 Q&A</h1>
+  <div class="qa-container" id="qaContainer"></div>
+
+  <script>
+    const questions = [
+      { q: "1. What is Artificial Intelligence (AI)?", a: "AI is the simulation of human intelligence in machines that are programmed to think and learn like humans." },
+      { q: "2. What is Machine Learning (ML)?", a: "ML is a subset of AI that allows systems to learn from data and improve over time without being explicitly programmed." },
+      { q: "3. Difference between AI and ML?", a: "AI is a broader concept of machines being intelligent. ML is a method used to achieve AI through data-driven learning." },
+      { q: "4. What is supervised learning?", a: "Supervised learning is a type of ML where the model is trained on labeled data." },
+      { q: "5. What is unsupervised learning?", a: "Unsupervised learning is where the model works on unlabeled data to find hidden patterns or intrinsic structures." },
+      { q: "6. What is reinforcement learning?", a: "Reinforcement learning is where agents learn to make decisions by receiving rewards or penalties." },
+      { q: "7. What is overfitting in ML?", a: "Overfitting occurs when a model performs well on training data but poorly on unseen data due to excessive complexity." },
+      { q: "8. What is underfitting?", a: "Underfitting occurs when a model is too simple to capture the patterns in the data." },
+      { q: "9. What is a neural network?", a: "A neural network is a series of algorithms that attempts to recognize relationships in data using a process similar to the human brain." },
+      { q: "10. What is deep learning?", a: "Deep learning is a subset of ML involving neural networks with many layers (deep neural networks)." },
+      { q: "11. What is a dataset?", a: "A dataset is a collection of data used for training or testing ML models." },
+      { q: "12. What is data preprocessing?", a: "Data preprocessing involves cleaning and preparing data to improve model performance." },
+      { q: "13. What is feature engineering?", a: "Feature engineering is the process of selecting, modifying, or creating new features to improve model accuracy." },
+      { q: "14. What is a model in ML?", a: "A model is a mathematical representation learned from data to make predictions or decisions." },
+      { q: "15. What is training in ML?", a: "Training is the process where a model learns from data by adjusting its parameters." },
+      { q: "16. What is testing?", a: "Testing evaluates the model on new, unseen data to measure its performance." },
+      { q: "17. What is cross-validation?", a: "Cross-validation is a technique to evaluate ML models by training and testing on different subsets of the data." },
+      { q: "18. What is accuracy?", a: "Accuracy is the ratio of correctly predicted instances to the total instances." },
+      { q: "19. What is precision?", a: "Precision is the ratio of true positives to the total predicted positives." },
+      { q: "20. What is recall?", a: "Recall is the ratio of true positives to all actual positives." },
+      { q: "21. What is F1 Score?", a: "F1 Score is the harmonic mean of precision and recall." },
+      { q: "22. What is a confusion matrix?", a: "A confusion matrix is a table used to describe the performance of a classification model." },
+      { q: "23. What is logistic regression?", a: "Logistic regression is a statistical model used for binary classification problems." },
+      { q: "24. What is linear regression?", a: "Linear regression is a method to model the relationship between a dependent variable and one or more independent variables." },
+      { q: "25. What is classification?", a: "Classification is predicting a category or class label from input data." },
+      { q: "26. What is regression?", a: "Regression is predicting a continuous value based on input variables." },
+      { q: "27. What is clustering?", a: "Clustering is grouping similar data points together without labeled data." },
+      { q: "28. What is KNN?", a: "K-Nearest Neighbors is a simple algorithm that classifies based on the majority class of its nearest neighbors." },
+      { q: "29. What is Naive Bayes?", a: "Naive Bayes is a classification technique based on Bayes’ Theorem assuming independence between features." },
+      { q: "30. What is Decision Tree?", a: "A decision tree is a tree-like model used to make decisions based on feature values." },
+      { q: "31. What is Random Forest?", a: "Random Forest is an ensemble of decision trees that improves accuracy and reduces overfitting." },
+      { q: "32. What is Gradient Boosting?", a: "Gradient Boosting is an ensemble method that builds models sequentially to correct previous errors." },
+      { q: "33. What is SVM?", a: "Support Vector Machine is a supervised algorithm used for classification by finding the optimal hyperplane." },
+      { q: "34. What is PCA?", a: "Principal Component Analysis reduces the dimensionality of data while retaining most variance." },
+      { q: "35. What is normalization?", a: "Normalization scales data to have values between 0 and 1." },
+      { q: "36. What is standardization?", a: "Standardization scales data to have zero mean and unit variance." },
+      { q: "37. What is an epoch?", a: "An epoch is one complete pass through the training dataset." },
+      { q: "38. What is a batch in ML?", a: "A batch is a subset of training data used in one iteration of model training." },
+      { q: "39. What is learning rate?", a: "Learning rate controls how much the model's weights are updated during training." },
+      { q: "40. What is loss function?", a: "A loss function measures how well a model's prediction matches the true value." },
+      { q: "41. What is gradient descent?", a: "Gradient descent is an optimization algorithm used to minimize the loss function." },
+      { q: "42. What is backpropagation?", a: "Backpropagation is an algorithm used to train neural networks by adjusting weights using gradient descent." },
+      { q: "43. What is a hyperparameter?", a: "Hyperparameters are settings used to control the training process, like learning rate, batch size, and number of layers." },
+      { q: "44. What is model evaluation?", a: "Model evaluation assesses how well your model performs using metrics like accuracy, precision, and recall." },
+      { q: "45. What is transfer learning?", a: "Transfer learning involves using a pre-trained model on a new problem to leverage learned features." },
+      { q: "46. What is a convolutional neural network (CNN)?", a: "CNNs are specialized neural networks used for image recognition and processing." },
+      { q: "47. What is a recurrent neural network (RNN)?", a: "RNNs are neural networks with loops, used for sequential data like time series or natural language." },
+      { q: "48. What is Natural Language Processing (NLP)?", a: "NLP is a field of AI focused on the interaction between computers and human language." },
+      { q: "49. What is anomaly detection?", a: "Anomaly detection is identifying rare items or events that differ significantly from the norm." },
+      { q: "50. What are some popular ML frameworks?", a: "Popular frameworks include TensorFlow, PyTorch, Scikit-learn, Keras, and XGBoost." }
+    ];
+
+    const container = document.getElementById("qaContainer");
+
+    questions.forEach((item, index) => {
+      const qaItem = document.createElement("div");
+      qaItem.className = "qa-item";
+
+      const question = document.createElement("div");
+      question.className = "question";
+      question.textContent = item.q;
+
+      const answer = document.createElement("div");
+      answer.className = "answer";
+      answer.textContent = item.a;
+
+      question.addEventListener("click", () => {
+        const isActive = question.classList.contains("active");
+        document.querySelectorAll(".answer").forEach(ans => ans.style.display = "none");
+        document.querySelectorAll(".question").forEach(q => q.classList.remove("active"));
+        if (!isActive) {
+          answer.style.display = "block";
+          question.classList.add("active");
+        }
+      });
+
+      qaItem.appendChild(question);
+      qaItem.appendChild(answer);
+      container.appendChild(qaItem);
+    });
+  </script>
+</body>
+</html>
