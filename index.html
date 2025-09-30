@@ -2,13 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AI & ML Flash Cards</title>
+  <title>AI & ML Flash Cards - One Per Page</title>
   <style>
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background-color: #f0f4f8;
       margin: 0;
       padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     h1 {
@@ -17,19 +20,11 @@
       margin-bottom: 30px;
     }
 
-    .flashcard-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      max-width: 1200px;
-      margin: auto;
-    }
-
     .flashcard {
-      width: 280px;
-      height: 180px;
+      width: 320px;
+      height: 200px;
       perspective: 1000px;
+      margin-bottom: 30px;
       cursor: pointer;
     }
 
@@ -52,7 +47,7 @@
       height: 100%;
       backface-visibility: hidden;
       border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
       padding: 20px;
       box-sizing: border-box;
       display: flex;
@@ -75,16 +70,55 @@
       line-height: 1.4;
     }
 
-    @media (max-width: 600px) {
-      .flashcard {
-        width: 90%;
-      }
+    .navigation {
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      background-color: #2c3e50;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:disabled {
+      background-color: #7f8c8d;
+      cursor: not-allowed;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: #1a242f;
+    }
+
+    .counter {
+      margin-top: 10px;
+      font-size: 14px;
+      color: #333;
     }
   </style>
 </head>
 <body>
-  <h1>AI & Machine Learning Flash Cards</h1>
-  <div class="flashcard-container" id="cardContainer"></div>
+  <h1>AI & ML Flash Cards</h1>
+
+  <div class="flashcard" id="flashcard">
+    <div class="card-inner" id="cardInner">
+      <div class="card-front" id="cardFront">Question</div>
+      <div class="card-back" id="cardBack">Answer</div>
+    </div>
+  </div>
+
+  <div class="navigation">
+    <button id="prevBtn">Previous</button>
+    <button id="nextBtn">Next</button>
+  </div>
+
+  <div class="counter" id="cardCounter"></div>
 
   <script>
     const flashcards = [
@@ -140,33 +174,44 @@
       { q: "Popular ML frameworks?", a: "TensorFlow, PyTorch, Keras, Scikit-learn, XGBoost." }
     ];
 
-    const container = document.getElementById('cardContainer');
+    let currentIndex = 0;
+    const card = document.getElementById('flashcard');
+    const cardInner = document.getElementById('cardInner');
+    const front = document.getElementById('cardFront');
+    const back = document.getElementById('cardBack');
+    const counter = document.getElementById('cardCounter');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
 
-    flashcards.forEach(item => {
-      const card = document.createElement('div');
-      card.className = 'flashcard';
+    function updateCard() {
+      const current = flashcards[currentIndex];
+      front.textContent = current.q;
+      back.textContent = current.a;
+      counter.textContent = `Card ${currentIndex + 1} of ${flashcards.length}`;
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.disabled = currentIndex === flashcards.length - 1;
+      card.classList.remove('flipped');
+    }
 
-      const inner = document.createElement('div');
-      inner.className = 'card-inner';
-
-      const front = document.createElement('div');
-      front.className = 'card-front';
-      front.textContent = item.q;
-
-      const back = document.createElement('div');
-      back.className = 'card-back';
-      back.textContent = item.a;
-
-      inner.appendChild(front);
-      inner.appendChild(back);
-      card.appendChild(inner);
-
-      card.addEventListener('click', () => {
-        card.classList.toggle('flipped');
-      });
-
-      container.appendChild(card);
+    card.addEventListener('click', () => {
+      card.classList.toggle('flipped');
     });
+
+    prevBtn.addEventListener('click', () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        updateCard();
+      }
+    });
+
+    nextBtn.addEventListener('click', () => {
+      if (currentIndex < flashcards.length - 1) {
+        currentIndex++;
+        updateCard();
+      }
+    });
+
+    updateCard(); // Initialize
   </script>
 </body>
 </html>
